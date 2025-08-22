@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
+use function Illuminate\Log\log;
 
 class ProfileController extends Controller
 {
@@ -18,9 +22,20 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . auth()->user()->id,
             'phone' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
         $user = auth()->user();
+
+        if ($request->hasFile('image')) {
+            $user->deleteUserImage();
+            $image = $request->file('image');
+            $userId = $user->id;
+            $timestamp = time();
+            $extension = $image->getClientOriginalExtension();
+            $imageName = "avatar_{$userId}_{$timestamp}.{$extension}";
+            $path = Storage::disk('supabase')->putFileAs('profiles', $image, $imageName, 'public');
+            $user->image = $path;
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;

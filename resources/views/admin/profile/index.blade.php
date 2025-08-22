@@ -19,20 +19,28 @@
                 <div class="col-12 col-md-12 col-lg-7">
                     <div class="card">
                         <form method="post" action="{{ route('admin.profile.update') }}" class="needs-validation"
-                            novalidate="">
+                            novalidate="" enctype="multipart/form-data">
                             @csrf
                             <div class="card-header">
                                 <h4>Update Profile</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="col-12 mb-3 d-flex justify-content-center">
+                                        <img src="{{ auth()->user()->image_url }}" alt="{{ auth()->user()->name }}"
+                                            width="150px" class="rounded-circle" />
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label for="image">Image</label>
+                                        <input id="image" type="file" name="image" class="form-control">
+                                    </div>
                                     <div class="form-group col-md-6 col-12">
-                                        <label>Full Name</label>
+                                        <label for="name">Full Name</label>
                                         <input type="text" name="name" class="form-control"
                                             value="{{ auth()->user()->name }}" required="">
                                     </div>
                                     <div class="form-group col-md-6 col-12">
-                                        <label>Email</label>
+                                        <label for="email">Email</label>
                                         <input type="email" name="email" class="form-control"
                                             value="{{ auth()->user()->email }}" required="">
 

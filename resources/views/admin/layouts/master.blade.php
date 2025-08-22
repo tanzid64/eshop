@@ -32,6 +32,8 @@
         gtag('config', 'UA-94034622-3');
     </script>
     <!-- /END GA -->
+    <!-- VITE Development mode refresh -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
