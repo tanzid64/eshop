@@ -43,11 +43,12 @@ class ProfileController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->save();
-
-            return redirect()->route('admin.profile')->with('success', 'Profile updated successfully');
+            toastr()->success("Profile updated successful.");
+            return redirect()->back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return redirect()->route('admin.profile')->with('error', 'Profile update failed');
+            toastr()->error("Profile update failed.");
+            return redirect()->back();
         }
     }
 
@@ -63,10 +64,12 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->password);
             $user->save();
 
-            return redirect()->route('admin.profile')->with('success', 'Password updated successfully');
+            toastr()->success("Password updated successful.");
+            return redirect()->back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return redirect()->route('admin.profile')->with('error', 'Password update failed');
+            toastr()->error("Password update failed.");
+            return redirect()->back();
         }
     }
 }
