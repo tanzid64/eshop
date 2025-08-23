@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('vendor.dashboard', absolute: false))->with('success', 'Login successful');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Login successful');
+        return redirect()->intended(route('user.dashboard', absolute: false))->with('success', 'Login successful');
     }
 
     /**
