@@ -72,29 +72,49 @@
                                     </div>
                                 </form>
                                 <div class="wsus__dash_pass_change mt-2">
-                                    <div class="row">
-                                        <div class="col-xl-4 col-md-6">
-                                            <div class="wsus__dash_pro_single">
-                                                <i class="fas fa-unlock-alt"></i>
-                                                <input type="password" placeholder="Current Password">
+                                    <form action="{{ route('user.profile.password.update') }}" method="POST">
+                                        <div class="row">
+                                            @csrf
+                                            <div class="col-xl-4 col-md-6">
+                                                <div class="wsus__dash_pro_single d-flex align-items-start">
+                                                    <i class="fas fa-unlock-alt"></i>
+                                                    <div class="ms-2 w-100">
+                                                        <input type="password" placeholder="Current Password"
+                                                            name="current_password">
+                                                        @error('current_password')
+                                                            <span class="text-danger d-block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6">
+                                                <div class="wsus__dash_pro_single d-flex align-items-start">
+                                                    <i class="fas fa-lock-alt"></i>
+                                                    <div class="ms-2 w-100">
+                                                        <input type="password" placeholder="New Password" name="password">
+                                                        @error('password')
+                                                            <span class="text-danger d-block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <div class="wsus__dash_pro_single d-flex align-items-start">
+                                                    <i class="fas fa-lock-alt"></i>
+                                                    <div class="ms-2 w-100">
+                                                        <input type="password" placeholder="Confirm Password"
+                                                            name="password_confirmation">
+                                                        @error('password_confirmation')
+                                                            <span class="text-danger d-block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <button class="common_btn" type="submit">Change Password</button>
                                             </div>
                                         </div>
-                                        <div class="col-xl-4 col-md-6">
-                                            <div class="wsus__dash_pro_single">
-                                                <i class="fas fa-lock-alt"></i>
-                                                <input type="password" placeholder="New Password">
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4">
-                                            <div class="wsus__dash_pro_single">
-                                                <i class="fas fa-lock-alt"></i>
-                                                <input type="password" placeholder="Confirm Password">
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-12">
-                                            <button class="common_btn" type="submit">upload</button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

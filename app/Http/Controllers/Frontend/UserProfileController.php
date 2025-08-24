@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserProfileController extends Controller
@@ -48,6 +49,27 @@ class UserProfileController extends Controller
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return redirect()->back()->with("error", $th->getMessage());
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'current_password' => 'required|current_password|max:255',
+                'password' => 'required|string|max:255|confirmed',
+            ]);
+
+            $user = auth()->user();
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return redirect()->back()->with("success", "Password updated successful.");
+        } catch (\Illuminate\Validation\ValidationException $th) {
+            Log::error($th->getMessage());
+            return redirect()->back()->with("error", "Validation failed!")->withErrors($th->errors());
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return redirect()->back()->with("error", "Password update failed.");
         }
     }
 }
