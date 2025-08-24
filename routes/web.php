@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'user', 'as' => 'user.'], function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [UserProfileController::class, 'index'])->name('profile');
+    Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 });
 
 require __DIR__ . '/auth.php';

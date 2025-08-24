@@ -32,10 +32,9 @@ class ProfileController extends Controller
             if ($request->hasFile('image')) {
                 $user->deleteUserImage();
                 $image = $request->file('image');
-                $userId = $user->id;
                 $timestamp = time();
                 $extension = $image->getClientOriginalExtension();
-                $imageName = "avatar_{$userId}_{$timestamp}.{$extension}";
+                $imageName = "avatar_{$user->id}_{$timestamp}.{$extension}";
                 $path = Storage::disk('supabase')->putFileAs('profiles', $image, $imageName, 'public');
                 $user->image = $path;
             }
