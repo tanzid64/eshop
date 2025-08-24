@@ -1,7 +1,6 @@
 @extends('frontend.dashboard.layouts.master')
 @section('content')
     <!-- Dashbaord Start -->
-    
     <div class="row">
                 <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
                     <div class="dashboard_content">
