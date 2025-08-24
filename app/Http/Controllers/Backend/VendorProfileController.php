@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ImageUploadTrait;
@@ -8,13 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class UserProfileController extends Controller
+class VendorProfileController extends Controller
 {
     use ImageUploadTrait;
-
     public function index()
     {
-        return view('frontend.dashboard.profile');
+        return view('vendor.dashboard.profile');
     }
 
     public function update(Request $request)
@@ -42,10 +41,14 @@ class UserProfileController extends Controller
             $user->email = $request->email;
             $user->save();
 
-            return redirect()->route('user.profile')->with('success', 'Profile updated successfully');
+            return redirect()->route('vendor.profile')->with('success', 'Profile updated successfully');
         } catch (\Illuminate\Validation\ValidationException $th) {
             Log::error($th->getMessage());
-            return redirect()->back()->with("error", "Validation failed!")->withErrors($th->errors())->withInput();
+            return redirect()
+                ->back()
+                ->with("error", "Validation failed!")
+                ->withErrors($th->errors())
+                ->withInput();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return redirect()->back()->with("error", $th->getMessage());
