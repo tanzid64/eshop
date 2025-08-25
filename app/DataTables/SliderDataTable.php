@@ -22,7 +22,17 @@ class SliderDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'slider.action')
+            ->addColumn('action', function ($query) {
+                $edit = "<button onClick='onEditBtnClick({$query->id})' class='btn text-primary'><i class='fas fa-edit'></i></button>";
+                $delete = "<a href='" . route('admin.slider.destroy', $query->id) . "' class='text-danger'><i class='fas fa-trash'></i></a>";
+                return $edit . ' ' . $delete;
+            })
+            ->rawColumns(['action'])
+            ->addColumn('banner', function ($query) {
+                $img = "<img src='{$query->banner_url}' class='img-fluid' style='width: 100px; height: 100px;'>";
+                return $img;
+            })
+            ->rawColumns(['banner', 'action'])
             ->setRowId('id');
     }
 
@@ -42,19 +52,19 @@ class SliderDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('slider-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->setTableId('slider-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            ]);
     }
 
     /**
@@ -63,15 +73,16 @@ class SliderDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->width(5)->addClass('text-center'),
+            Column::make('banner')->width(200),
+            Column::make('title'),
+            Column::make('type'),
+            Column::make('order')->width(10)->addClass('text-center'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(200)
+                ->addClass('text-center'),
         ];
     }
 
