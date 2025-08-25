@@ -20,11 +20,17 @@
                             <h4>Create Slider</h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('admin.slider.store') }}">
+                            <form method="POST" action="{{ route('admin.slider.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <label for="banner">Banner</label>
-                                    <input type="file" class="form-control" id="banner" name="banner">
+                                    <input id="banner" type="file" name="banner"
+                                        class="form-control @error('banner') is-invalid @enderror" accept="image/*">
+                                    @error('banner')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="type">Types</label>
@@ -45,7 +51,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="order">Ordering</label>
-                                        <input type="text" class="form-control" id="order" name="order">
+                                        <input type="number" class="form-control" id="order" name="order">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="status">Status</label>

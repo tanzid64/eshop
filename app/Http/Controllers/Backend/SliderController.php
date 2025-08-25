@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Slider;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class SliderController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +34,47 @@ class SliderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'banner' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'type' => 'required|string',
+                'title' => 'required|string',
+                'starting_price' => 'required|string',
+                'button_url' => 'required|string',
+                'order' => 'required|integer',
+                'status' => 'required|boolean',
+            ]);
+
+            // Handle Banner Upload
+            $banner = $request->file('banner');
+            $bannerName = time() . '.' . $banner->getClientOriginalExtension();
+            $bannerPath = $this->uploadImage($banner, $bannerName, 'cloudinary', 'sliders');
+            $bannerUrl = $this->getCloudinaryPublicUrl($bannerPath);
+
+            // Store Slider Data
+            $slider = Slider::create([
+                'banner_public_id' => $bannerPath,
+                'type' => $request->type,
+                'title' => $request->title,
+                'starting_price' => $request->starting_price,
+                'button_url' => $request->button_url,
+                'order' => $request->order,
+                'status' => $request->status,
+            ]);
+
+            return redirect()->route('admin.slider.index')->with('success', 'Slider created successfully');
+        } catch (ValidationException $e) {
+            if ($request->hasFile('banner')) {
+                $this->removeImage($bannerPath, 'cloudinary');
+            }
+            return redirect()->back()->with('error', "Validation Errors")->withErrors($e->errors())->withInput();
+        } catch (\Throwable $th) {
+            Log::error($th);
+            if ($request->hasFile('banner')) {
+                $this->removeImage($bannerPath, 'cloudinary');
+            }
+            return redirect()->back()->with('error', 'Something went wrong')->withInput();
+        }
     }
 
     /**

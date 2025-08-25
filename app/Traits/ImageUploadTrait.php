@@ -11,6 +11,12 @@ trait ImageUploadTrait
         $path = Storage::disk($diskName)->putFileAs($folder, $file, $fileName, 'public');
         return $path;
     }
+
+    public function getCloudinaryPublicUrl(string $publicId)
+    {
+        return Storage::disk('cloudinary')->url($publicId);
+    }
+
     public function removeImage(string $path, string $diskName)
     {
         Storage::disk($diskName)->delete($path);
