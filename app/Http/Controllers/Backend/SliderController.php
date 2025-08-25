@@ -18,7 +18,8 @@ class SliderController extends Controller
      */
     public function index()
     {
-        return view('admin.slider.index');
+        $sliders = Slider::orderBy('order', 'asc')->get();
+        return view('admin.slider.index', compact('sliders'));
     }
 
     /**
@@ -49,7 +50,6 @@ class SliderController extends Controller
             $banner = $request->file('banner');
             $bannerName = time() . '.' . $banner->getClientOriginalExtension();
             $bannerPath = $this->uploadImage($banner, $bannerName, 'cloudinary', 'sliders');
-            $bannerUrl = $this->getCloudinaryPublicUrl($bannerPath);
 
             // Store Slider Data
             $slider = Slider::create([
@@ -61,19 +61,21 @@ class SliderController extends Controller
                 'order' => $request->order,
                 'status' => $request->status,
             ]);
-
-            return redirect()->route('admin.slider.index')->with('success', 'Slider created successfully');
+            toastr()->success('Slider created successfully');
+            return redirect()->route('admin.slider.index');
         } catch (ValidationException $e) {
             if ($request->hasFile('banner')) {
                 $this->removeImage($bannerPath, 'cloudinary');
             }
-            return redirect()->back()->with('error', "Validation Errors")->withErrors($e->errors())->withInput();
+            toastr()->error("Validation Errors");
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Throwable $th) {
             Log::error($th);
             if ($request->hasFile('banner')) {
                 $this->removeImage($bannerPath, 'cloudinary');
             }
-            return redirect()->back()->with('error', 'Something went wrong')->withInput();
+            toastr()->error('Something went wrong');
+            return redirect()->back()->withInput();
         }
     }
 
