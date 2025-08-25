@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\DataTables\SliderDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Slider;
 use App\Traits\ImageUploadTrait;
@@ -16,10 +17,9 @@ class SliderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(SliderDataTable $dataTable)
     {
-        $sliders = Slider::orderBy('order', 'asc')->get();
-        return view('admin.slider.index', compact('sliders'));
+        return $dataTable->render('admin.slider.index');
     }
 
     /**
